@@ -15,13 +15,13 @@ Seguir este estándar garantiza identificación inequívoca de cada activo, comp
 Active Directory, y una base estable para automatización con herramientas como Terraform, Ansible o
 cualquier integración con CMDB.
 
-# Nomenclatura de Servidores (Parte I)
+# Nomenclatura de Servidores
  
 Aplica a todos los servidores (físicos, virtuales, cloud) gestionados por Becall. Los equipos de usuario se cubren en la Parte II.
  
 ---
  
-## 1. Objetivos del Estándar
+## Objetivos del Estándar
  
 - Identificación inequívoca de ubicación geográfica, entorno, plataforma y rol funcional.
 - Compatibilidad técnica con DNS (RFC 1034/1123), Active Directory y sistemas operativos modernos.
@@ -31,9 +31,9 @@ Aplica a todos los servidores (físicos, virtuales, cloud) gestionados por Becal
  
 ---
  
-## 2. Reglas Técnicas Generales
+## Reglas Técnicas Generales
  
-### 2.1 Sintaxis y Caracteres Permitidos
+### Sintaxis y Caracteres Permitidos
  
 Los hostnames deben cumplir las especificaciones DNS (RFC 1034/1123):
  
@@ -43,19 +43,19 @@ Los hostnames deben cumplir las especificaciones DNS (RFC 1034/1123):
 - No usar guion como primer ni último carácter.
 - Comenzar con letra; terminar en letra o dígito.
  
-### 2.2 Límites de Longitud
+### Límites de Longitud
  
 - **Hostname (label):** máximo 63 caracteres (límite DNS RFC 1034).
 - **FQDN completo:** máximo 255 caracteres.
 - **Recomendación práctica:** 18–24 caracteres para hostname.
  
-### 2.3 Compatibilidad con Active Directory
+### Compatibilidad con Active Directory
  
 Windows AD tiene una restricción técnica dura para el atributo `sAMAccountName` de cuentas de equipo: **15 caracteres** (más el `$` final). Windows trunca automáticamente el hostname si supera ese límite, generando riesgo de colisiones.
  
 **Solución adoptada:** nombre corto para AD (ver sección 2.3.1). El FQDN completo del servidor se conserva en el atributo `description` del objeto AD y en CMDB.
  
-### 2.3.1 Nombre Corto para Active Directory
+### Nombre Corto para Active Directory
  
 Para resolver definitivamente la limitación de 15 caracteres, se define un nombre corto exclusivo para el objeto de equipo en AD. Este nombre no sustituye al hostname DNS; es el nombre con el que el servidor se une al dominio.
  
@@ -87,7 +87,7 @@ Al unir un servidor al dominio, Windows rellena automáticamente el atributo `dN
 
 > El `dNSHostName` resuelve al nombre corto de AD, no al hostname DNS largo. Los sistemas de monitorización y CMDB deben usar el FQDN DNS (campo `description` o registro CMDB), nunca `dNSHostName`, para referenciar el servidor.
  
-### 2.4 Principios de Diseño
+### Principios de Diseño
  
 - **Consistencia:** misma estructura de campos y abreviaturas en toda la organización.
 - **Descriptivo pero conciso:** solo atributos estables y relevantes operativamente.
@@ -98,9 +98,9 @@ Al unir un servidor al dominio, Windows rellena automáticamente el atributo `dN
  
 ---
  
-## 3. Estructura del Nombre de Servidor
+## Estructura del Nombre de Servidor
  
-### 3.1 Patrón de Hostname
+### Patrón de Hostname
  
 ```
 <LOC>-<PLT>-<ENV>-<ROL>-<NNN>
@@ -122,7 +122,7 @@ es-m-onp-prd-dir-001
 
 > **Advertencia — Capitalización del campo `LOC`:** en la Parte I (servidores), el campo `LOC` se escribe siempre en **minúsculas** (`es-m`, `pt-11`). En la Parte II (equipos de usuario), se escribe en **mayúsculas** (`ES-M`, `PT-11`). Esta diferencia es intencionada y permite distinguir visualmente ambos inventarios. Todos los pipelines de automatización deben aplicar la transformación correspondiente según el tipo de activo. Véase Anexo C para expresiones regulares de validación.
  
-### 3.2 Patrón de FQDN
+### Patrón de FQDN
 
 ```
 <hostname>.<env>.<loc>.<provider>.<dominio_corporativo>
@@ -151,9 +151,9 @@ es-m-dmg-prd-fsr-001.prd.es-m.dmg.becall.local
  
 ---
  
-## 4. Códigos Estandarizados
+## Códigos Estandarizados
  
-### 4.1 Ubicación Geográfica (`LOC`) — ISO 3166-2 completo en minúsculas
+### Ubicación Geográfica (`LOC`) — ISO 3166-2 completo en minúsculas
  
 Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minúsculas. Para regiones cloud genéricas (sin subdivisión geográfica concreta), se usan códigos de región abreviados.
  
@@ -179,7 +179,7 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
  
 > Cuando se usa un código de región cloud genérico como `LOC`, el campo `<PAIS>` del nombre corto de AD se determina por el país físico real del datacenter (ver sección 2.3.1).
  
-### 4.2 Plataforma / Proveedor (`PLT`)
+### Plataforma / Proveedor (`PLT`)
  
 | Código | Proveedor / Plataforma |
 |--------|------------------------|
@@ -193,7 +193,7 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
 
 > **Criterio de uso `onp` vs `vmw`/`kvm`:** usar `onp` para todos los servidores on-premise (físicos y VMs). Reservar `vmw` y `kvm` únicamente para los servidores que actúan como hipervisores (ROL `hvs`), donde identificar la plataforma de virtualización tiene relevancia operativa directa. Las VMs que corren sobre esos hipervisores siguen usando `onp`.
  
-### 4.3 Entorno (`ENV`)
+### Entorno (`ENV`)
  
 | Código | Descripción |
 |--------|-------------|
@@ -203,7 +203,7 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
 | `dev` | Desarrollo |
 | `lab` | Laboratorio / PoC |
  
-### 4.4 Rol Funcional (`ROL`)
+### Rol Funcional (`ROL`)
 
 #### Aplicaciones y Backend
 
@@ -275,7 +275,7 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
 | `ups` | SAI / UPS |
 | `pbx` | Servidor PBX / centralita IP (Asterisk, FreePBX, SBC, etc.) |
  
-### 4.5 Secuencia Numérica (`NNN`)
+### Secuencia Numérica (`NNN`)
  
 - Formato: `001`, `002`, `003`… `999` (siempre 3 dígitos con ceros a la izquierda).
 - **Rango válido: `001`–`999`. El valor `000` está explícitamente excluido** y no debe asignarse bajo ninguna circunstancia.
@@ -287,9 +287,9 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
  
 ---
  
-## 5. Aplicación del Estándar por Tipo de Servidor
+## Aplicación del Estándar por Tipo de Servidor
  
-### 5.1 Servidores de Aplicación
+### Servidores de Aplicación
  
 ```
 es-m-dmg-prd-app-001.prd.es-m.dmg.becall.net
@@ -297,7 +297,7 @@ es-m-dmg-prd-app-002.prd.es-m.dmg.becall.net
 eus2-aws-dev-api-001.dev.eus2.aws.becall.net
 ```
  
-### 5.2 Servidores de Base de Datos
+### Servidores de Base de Datos
  
 **Nodos físicos:**
  
@@ -313,7 +313,7 @@ prd-db-writer.prd.es-m.onp.becall.net → es-m-onp-prd-dbs-001
 prd-db-reader.prd.es-m.onp.becall.net → es-m-onp-prd-dbs-002
 ```
  
-### 5.3 Servidores Web y Balanceados
+### Servidores Web y Balanceados
  
 ```
 es-m-dmg-prd-web-001.prd.es-m.dmg.becall.net
@@ -321,7 +321,7 @@ es-m-dmg-prd-web-002.prd.es-m.dmg.becall.net
 www.becall.net → prd-web-vip.prd.es-m.dmg.becall.net   (CNAME/VIP)
 ```
  
-### 5.4 Infraestructura (AD, DNS, Monitorización)
+### Infraestructura (AD, DNS, Monitorización)
  
 ```
 es-m-onp-prd-dir-001.prd.es-m.onp.becall.net
@@ -330,14 +330,14 @@ es-m-dmg-prd-mon-001.prd.es-m.dmg.becall.net
 es-m-dmg-prd-bkp-001.prd.es-m.dmg.becall.net
 ```
  
-### 5.5 Hipervisores
+### Hipervisores
  
 ```
 es-m-onp-prd-hvs-001.prd.es-m.onp.becall.net
 es-m-vmw-prd-hvs-002.prd.es-m.vmw.becall.net
 ```
  
-### 5.6 Kubernetes / OpenShift
+### Kubernetes / OpenShift
  
 **Control plane:**
  
@@ -353,7 +353,7 @@ eus2-aws-prd-kwn-001.prd.eus2.aws.becall.net
 eus2-aws-prd-kwn-002.prd.eus2.aws.becall.net
 ```
  
-### 5.7 Equipos de Red
+### Equipos de Red
  
 Los equipos de red siguen el mismo patrón general: `<LOC>-<PLT>-<ENV>-<ROL>-<NNN>`. Un dispositivo de red puede ser on-premise o estar en cloud (p. ej., un router virtual en AWS).
  
@@ -366,9 +366,9 @@ euw1-aws-prd-rtr-001.prd.euw1.aws.becall.net
  
 ---
  
-## 6. Políticas de Ciclo de Vida
+## Políticas de Ciclo de Vida
  
-### 6.1 Alta de Servidores
+### Alta de Servidores
 
 > **Nota:** el dominio interno de Active Directory es `becall.local`. Los FQDNs internos usan `becall.local` en lugar de `becall.net`. La zona pública `becall.net` se gestiona en Cloudflare para servicios expuestos a internet.
  
@@ -381,7 +381,7 @@ euw1-aws-prd-rtr-001.prd.euw1.aws.becall.net
    - Servidores con FQDN en `becall.local` (zona interna, uso transitorio) → crear registro en el DNS interno del DC (Windows DNS). No crear registros `becall.local` en Cloudflare.
 6. **Unión a AD:** renombrar el equipo con el nombre corto antes de unir al dominio. Registrar el FQDN completo en el atributo `description` (p. ej., `es-m-dmg-prd-app-001.prd.es-m.dmg.becall.net`).
  
-### 6.2 Cambio de Ubicación Geográfica (renombrado obligatorio)
+### Cambio de Ubicación Geográfica (renombrado obligatorio)
  
 Si un servidor cambia de ubicación geográfica (diferente código ISO 3166-2 en `LOC`), se debe renombrar para reflejar la nueva ubicación.
  
@@ -397,12 +397,12 @@ Si un servidor cambia de ubicación geográfica (diferente código ISO 3166-2 en
  
 > **Nota:** si el cambio de ubicación implica cambio de país, se genera un nuevo nombre corto de AD con el prefijo ISO 3166-2 del nuevo país.
  
-### 6.3 Cambio de Rol o Migración de Proveedor
+### Cambio de Rol o Migración de Proveedor
  
 - **Cambio de rol permanente:** crear nuevo servidor con nombre correcto, migrar servicios, decomisionar anterior.
 - **Migración de proveedor:** crear nuevo hostname con `PLT` actualizado; usar CNAMEs funcionales para transición transparente.
  
-### 6.4 Decomisión y Reciclaje
+### Decomisión y Reciclaje
  
 1. Marcar en CMDB: estado cambia a `decomisionado` con fecha y motivo.
 2. Retener histórico: conservar asociación hostname–IP–servicios para auditoría.
@@ -412,9 +412,9 @@ Si un servidor cambia de ubicación geográfica (diferente código ISO 3166-2 en
  
 ---
  
-## 7. Gestión de DNS en Cloudflare
+## Gestión de DNS en Cloudflare
  
-### 7.1 Estructura de Zonas
+### Estructura de Zonas
  
 **Zona raíz:** `becall.net`
  
@@ -435,7 +435,7 @@ es-m.dmg.becall.local         (DMG Cloud Madrid — DNS interno)
 prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
 ```
  
-### 7.2 Split-Horizon DNS
+### Split-Horizon DNS
  
 1. Configurar Resolver Policies en Cloudflare Zero Trust › Gateway: si el **FQDN** pertenece a los subdominios `*.dmg.becall.net` o `*.onp.becall.net`, resolver vía DNS privado.
 2. Para Enterprise: usar DNS › Internal DNS con vistas privadas.
@@ -443,9 +443,9 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
  
 ---
  
-## 8. Buenas Prácticas — Servidores
+## Buenas Prácticas — Servidores
  
-### 8.1 Qué Evitar en el Hostname
+### Qué Evitar en el Hostname
  
 - Unidad de Negocio (BU) → va en CMDB/etiquetas cloud.  
 - Versiones de software (`sql2022`, `win2019`).  
@@ -456,7 +456,7 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
 - Cambiar hostname por movimientos menores (cambio de AZ, migración de host físico dentro de la misma ubicación).  
 - Reutilizar hostnames decomisionados.  
  
-### 8.2 Qué Hacer
+### Qué Hacer
  
 - Usar CNAMEs para nombres funcionales que pueden moverse entre nodos.  
 - Documentar excepciones explícitamente con aprobación de Arquitectura.  
@@ -468,7 +468,7 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
  
 ---
  
-## 9. Ejemplos Completos — Servidores
+## Ejemplos Completos — Servidores
  
 ### Ejemplo 1: Servidor de Aplicación Producción (Madrid, DMG Cloud)
  
@@ -538,13 +538,13 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
  
 ---
  
-# Nomenclatura de Equipos de Usuario (Parte II )
+# Nomenclatura de Equipos de Usuario
  
 Aplica a todos los equipos de usuario (portátiles, sobremesas, tablets, teléfonos corporativos, etc.). Los servidores se cubren en la Parte I.
  
 ---
  
-## 10. Nomenclatura Base
+## Nomenclatura Base
  
 ```
 BCL-<LOC>-<NNN>
@@ -573,9 +573,9 @@ BCL-PT-11-001   (Equipo asignado a empleado de la sede de Lisboa)
  
 ---
  
-## 11. Códigos de Campo — Equipos de Usuario
+## Códigos de Campo — Equipos de Usuario
  
-### 11.1 Campo `LOC` (ISO 3166-2 completo en mayúsculas)
+### Campo `LOC` (ISO 3166-2 completo en mayúsculas)
  
 **Sedes actuales Becall:**
  
@@ -598,7 +598,7 @@ BCL-PT-11-001   (Equipo asignado a empleado de la sede de Lisboa)
 | `IT-RM` | Roma, Italia |
 | `GB-LND` | Londres, Reino Unido |
  
-### 11.2 Campo `NNN` (Contador secuencial)
+### Campo `NNN` (Contador secuencial)
  
 - Formato: `001` a `999`, siempre 3 dígitos con ceros a la izquierda.
 - **Rango válido: `001`–`999`. El valor `000` está explícitamente excluido** y no debe asignarse bajo ninguna circunstancia. Los sistemas de inventario y los pipelines de validación deben rechazar cualquier nombre que contenga `-000` como sufijo.
@@ -606,7 +606,7 @@ BCL-PT-11-001   (Equipo asignado a empleado de la sede de Lisboa)
 - Mantener un registro centralizado del último NNN asignado por sede.
 - No reutilizar números de equipos decomisionados.
  
-### 11.3 Tipo de Dispositivo (en CMDB y AD)
+### Tipo de Dispositivo (en CMDB y AD)
  
 El tipo de dispositivo no forma parte del nombre del equipo. Se registra como atributo en CMDB y en Active Directory:
  
@@ -622,7 +622,7 @@ El tipo de dispositivo no forma parte del nombre del equipo. Se registra como at
  
 ---
  
-## 12. Compatibilidad con Active Directory — Equipos de Usuario
+## Compatibilidad con Active Directory — Equipos de Usuario
  
 El nuevo patrón `BCL-<LOC>-<NNN>` produce nombres que caben dentro del límite de 15 caracteres de `sAMAccountName` en la mayoría de casos, eliminando el problema de truncado que existía con el patrón anterior.
  
@@ -638,16 +638,16 @@ El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin 
  
 ---
  
-## 13. Multisede y Movimientos entre Ubicaciones
+## Multisede y Movimientos entre Ubicaciones
  
-### 13.1 Regla General
+### Regla General
  
 - `LOC` representa la **sede de adscripción** del empleado, no su ubicación física en cada momento.
 - Un trabajador en remoto o desplazado temporalmente **no provoca renombrado** del equipo.
 - Si el empleado cambia de sede de adscripción de forma permanente (p. ej., traslado definitivo a otra delegación), el equipo **se renombra** para reflejar la nueva sede.
 - La ubicación física real (domicilio, oficina de cliente, etc.) se registra en el atributo `location` de AD y en CMDB, pero no afecta al nombre del equipo.
  
-### 13.2 Proceso de Renombrado por Cambio de Sede de Adscripción
+### Proceso de Renombrado por Cambio de Sede de Adscripción
  
 1. Confirmar que el traslado del empleado es permanente y aprobado por RRHH/IT.
 2. Determinar el nuevo `LOC` y consultar el siguiente `NNN` disponible para esa sede.
@@ -661,9 +661,9 @@ El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin 
  
 ---
  
-## 14. Implementación en Active Directory — Equipos de Usuario
+## Implementación en Active Directory — Equipos de Usuario
  
-### 14.1 Atributos AD Recomendados
+### Atributos AD Recomendados
  
 | Atributo AD | Contenido |
 |-------------|-----------|
@@ -674,7 +674,7 @@ El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin 
  
 ---
  
-## 15. Ejemplos Completos — Equipos de Usuario
+## Ejemplos Completos — Equipos de Usuario
  
 | Nombre | Tipo (en CMDB/AD) | Sede de adscripción |
 |--------|-------------------|---------------------|
@@ -692,7 +692,7 @@ El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin 
  
 ---
  
-## 16. Casos Especiales y Excepciones
+## Casos Especiales y Excepciones
  
 - **Laboratorios y entornos de prueba:** prefijo `BCL-<LOC>-TST-<NNN>` (p. ej., `BCL-ES-M-TST-001`) seguido de identificador libre, documentado en inventario. El campo `<LOC>` sigue el mismo formato ISO 3166-2 en mayúsculas que el resto de la Parte II.
 - **Equipos temporales (préstamos, demos):** prefijo `BCL-<LOC>-TMP-<NNN>` (p. ej., `BCL-ES-LE-TMP-001`) hasta asignación definitiva a un empleado y sede. El campo `<LOC>` indica la sede de origen o almacén del equipo.
@@ -703,15 +703,15 @@ El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin 
  
 ---
  
-# PARTE III — Gobernanza
+# Gobernanza
  
 ---
  
-## 17. Política de Migración — Servidores Pre-Estándar
+## Política de Migración — Servidores Pre-Estándar
 
 Esta sección regula el tratamiento de los servidores que existían antes de la publicación del presente estándar (versión 1.1, marzo 2026) y que por tanto tienen nombres no conformes.
 
-### 17.1 Clasificación de Servidores Pre-Estándar
+### Clasificación de Servidores Pre-Estándar
 
 Al publicarse este estándar, todos los servidores existentes deben ser inventariados en CMDB con el campo `conformidad_nomenclatura` con uno de estos valores:
 
@@ -721,7 +721,7 @@ Al publicarse este estándar, todos los servidores existentes deben ser inventar
 | `no_conforme` | El nombre no cumple el estándar (nombre libre, formato incorrecto, nombre corto AD no aleatorio, etc.). |
 | `exento` | El servidor ha sido declarado exento por el Comité de Nomenclatura con justificación documentada. |
 
-### 17.2 Plan de Migración Progresiva
+### Plan de Migración Progresiva
 
 Los servidores `no_conforme` deben ser migrados al nuevo estándar en un plazo máximo de **6 meses** desde la publicación de este estándar (fecha límite: **17 de septiembre de 2026**), siguiendo este orden de prioridad:
 
@@ -737,7 +737,7 @@ Los servidores `no_conforme` deben ser migrados al nuevo estándar en un plazo m
 - `fecha_migracion_prevista`: fecha estimada de renombrado.
 - `responsable`: equipo o persona encargada de ejecutar el renombrado.
 
-### 17.3 Proceso de Renombrado de Servidores Pre-Estándar
+### Proceso de Renombrado de Servidores Pre-Estándar
 
 El renombrado sigue el mismo procedimiento de la sección 6.2 (Cambio de Ubicación Geográfica), con estas particularidades:
 
@@ -747,7 +747,7 @@ El renombrado sigue el mismo procedimiento de la sección 6.2 (Cambio de Ubicaci
 4. Actualizar el atributo `description` en AD con el nuevo FQDN completo.
 5. Actualizar CMDB: `conformidad_nomenclatura = conforme`, registrar nombre anterior y fecha de migración.
 
-### 17.4 Exenciones
+### Exenciones
 
 Los servidores que no puedan migrarse en el plazo establecido (p. ej., por dependencias críticas de aplicación, restricciones contractuales de soporte o servidores en proceso inminente de decomisión) pueden ser declarados exentos por el Comité de Nomenclatura. Toda exención debe:
 - Documentarse en CMDB con motivo, fecha de revisión y alternativa propuesta.
@@ -756,14 +756,14 @@ Los servidores que no puedan migrarse en el plazo establecido (p. ej., por depen
 
 ---
 
-## 18. Gestión de Abreviaturas y Gobernanza
+## Gestión de Abreviaturas y Gobernanza
  
-### 18.1 Documento Maestro de Códigos
+### Documento Maestro de Códigos
  
 - **Ubicación:** repositorio Git corporativo + Wiki de IT (https://wiki.becall.net/naming-standard).
 - **Contenido:** lista actualizada de todos los códigos aprobados (`LOC`, `PLT`, `ENV`, `ROL`), tabla de mapeo BU → etiquetas cloud, ejemplos por tipo de dispositivo, procedimiento para solicitar nuevos códigos e histórico de cambios.
  
-### 18.2 Comité de Nomenclatura
+### Comité de Nomenclatura
  
 **Responsables:** Equipo de Arquitectura / Plataforma IT.
  
@@ -781,7 +781,7 @@ Los servidores que no puedan migrarse en el plazo establecido (p. ej., por depen
 4. Publicación en documento maestro y Wiki.
 5. Comunicación a equipos afectados.
  
-### 18.3 Auditorías y Control de Cumplimiento
+### Auditorías y Control de Cumplimiento
  
 - Auditorías de conformidad trimestrales/semestrales.
 - Informes periódicos de dispositivos con nombres no conformes.

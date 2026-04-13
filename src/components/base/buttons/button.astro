@@ -49,7 +49,7 @@ const isIconOnly = (hasIconLeading || hasIconTrailing) && !hasContent;
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-export const styles = {
+const styles = {
     common: {
         root: [
             "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -152,18 +152,10 @@ export const styles = {
             ].join(" "),
         },
     },
-} as const;
+};
 ---
 
-<!--
-  Uso de iconos: pasa el icono al slot correspondiente con el atributo data-icon.
-  Los selectores CSS del componente (*:data-icon:...) dependen de él.
-
-  <Button>
-    <SomeIcon slot="icon-leading" data-icon="leading" />
-    Texto
-  </Button>
--->{
+{
     href ? (
         <a
             href={isDisabled ? undefined : href}

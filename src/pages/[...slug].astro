@@ -3,6 +3,7 @@ import BadgeGroup from "@/components/base/badges/badge-groups.astro";
 import Badge from "@/components/base/badges/badge.astro";
 import Button from "@/components/base/buttons/button.astro";
 import Layout from "@/components/shared/layouts/default.astro";
+import { Link01 } from "@untitledui/icons";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
 <Layout title={post.data.title}>
@@ -44,18 +45,43 @@ const { Content } = await render(post);
         </div>
         <picture class="max-w-xl w-full h-180 bg-secondary"></picture>
     </header>
-    <section class="mx-auto max-w-5xl w-full pb-24 lg:px-8 px-4 flex gap-16">
-        <aside class="min-w-60 hidden lg:flex flex-col gap-8">
+    <section
+        class="relative mx-auto max-w-5xl w-full pb-24 lg:px-8 px-4 flex gap-16"
+    >
+        <aside
+            class="sticky top-0 self-start min-w-60 hidden lg:flex flex-col gap-8"
+        >
             <hr class="border-secondary" />
             <div class="flex flex-col gap-4">
                 <p class="font-semibold text-brand-tertiary">
                     Tabla de contenidos
                 </p>
                 <div class="flex flex-col gap-3">
-                    <Button>Hello world</Button>
+                    {
+                        headings.map(
+                            (heading) =>
+                                heading.depth < 3 && (
+                                    <Button
+                                        href={`#${heading.slug}`}
+                                        color="link-gray"
+                                        class:list={[
+                                            heading.depth == 2 && "ml-4",
+                                            "*:truncate",
+                                        ]}
+                                    >
+                                        {heading.text}
+                                    </Button>
+                                ),
+                        )
+                    }
                 </div>
             </div>
             <hr class="border-secondary" />
+            <!-- 
+            <Button color="secondary" class="aspect-square w-fit">
+                <Link01 slot="icon-leading" />
+            </Button> 
+            -->
         </aside>
         <div class="flex flex-col">
             <div class="prose max-w-180 w-full">
