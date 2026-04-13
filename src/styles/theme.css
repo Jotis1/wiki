@@ -1,8 +1,8 @@
 @theme {
     /* FONT FAMILY */
-    --font-body: var(--font-geist-sans, "Geist"), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-display: var(--font-merriweather, "Merriweather"), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-mono: var(--font-geist-mono, "Geist Mono"), ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-body: var(--font-geist-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: var(--font-merriweather), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* FONT SIZE */
     --text-xs: calc(var(--spacing) * 3);
