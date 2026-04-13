@@ -1,10 +1,21 @@
 ---
 title: Estándar de Nomenclatura Becall
 description: Estándar de nomenclatura para todos los dispositivos Becall — servidores, equipos de usuario y objetos de Active Directory.
+readingTime: 29
 slug: teams/it/naming-standard
+tags:
+    - Tecnología
+    - Estándares
 ---
- 
-# PARTE I — Nomenclatura de Servidores
+
+Este documento define el estándar de nomenclatura para todos los activos gestionados por Becall:
+servidores físicos y virtuales, instancias cloud y equipos de usuario.
+
+Seguir este estándar garantiza identificación inequívoca de cada activo, compatibilidad con DNS y
+Active Directory, y una base estable para automatización con herramientas como Terraform, Ansible o
+cualquier integración con CMDB.
+
+# Nomenclatura de Servidores (Parte I)
  
 Aplica a todos los servidores (físicos, virtuales, cloud) gestionados por Becall. Los equipos de usuario se cubren en la Parte II.
  
@@ -109,7 +120,7 @@ Al unir un servidor al dominio, Windows rellena automáticamente el atributo `dN
 es-m-onp-prd-dir-001
 ```
 
-> ⚠️ **Advertencia — Capitalización del campo `LOC`:** en la Parte I (servidores), el campo `LOC` se escribe siempre en **minúsculas** (`es-m`, `pt-11`). En la Parte II (equipos de usuario), se escribe en **mayúsculas** (`ES-M`, `PT-11`). Esta diferencia es intencionada y permite distinguir visualmente ambos inventarios. Todos los pipelines de automatización deben aplicar la transformación correspondiente según el tipo de activo. Véase Anexo C para expresiones regulares de validación.
+> **Advertencia — Capitalización del campo `LOC`:** en la Parte I (servidores), el campo `LOC` se escribe siempre en **minúsculas** (`es-m`, `pt-11`). En la Parte II (equipos de usuario), se escribe en **mayúsculas** (`ES-M`, `PT-11`). Esta diferencia es intencionada y permite distinguir visualmente ambos inventarios. Todos los pipelines de automatización deben aplicar la transformación correspondiente según el tipo de activo. Véase Anexo C para expresiones regulares de validación.
  
 ### 3.2 Patrón de FQDN
 
@@ -124,7 +135,7 @@ es-m-onp-prd-dir-001
 | `becall.net` | Zona pública y servicios expuestos a internet | Cloudflare |
 | `becall.local` | Zona interna de Active Directory (uso transitorio) | DNS interno del DC |
 
-> ⚠️ **Nota de transición:** el uso de `.local` como sufijo de dominio de AD no está recomendado por las mejores prácticas actuales (conflictos con mDNS/Bonjour, incompatibilidad con ciertos servicios cloud). El objetivo es migrar todos los registros internos a `becall.net` gestionado con split-horizon DNS (ver sección 7.2). Mientras la migración no esté completada, `becall.local` se mantiene como dominio interno válido y debe contemplarse en todas las herramientas de validación.
+> **Nota de transición:** el uso de `.local` como sufijo de dominio de AD no está recomendado por las mejores prácticas actuales (conflictos con mDNS/Bonjour, incompatibilidad con ciertos servicios cloud). El objetivo es migrar todos los registros internos a `becall.net` gestionado con split-horizon DNS (ver sección 7.2). Mientras la migración no esté completada, `becall.local` se mantiene como dominio interno válido y debe contemplarse en todas las herramientas de validación.
 
 **Ejemplo (zona pública / becall.net):**
 
@@ -272,7 +283,7 @@ Se usa el código ISO 3166-2 completo (incluyendo el prefijo de país) en minús
 - No reutilizar números dentro del mismo grupo después de decomisión.
 - Reservar rangos según necesidad estimada (p. ej., `001–099` para nodos principales, `101–199` para réplicas).
 
-> ⚠️ **Nota operativa — LOC de un solo carácter tras el guion:** algunos códigos ISO 3166-2 producen segmentos de un solo carácter en el campo `LOC` (p. ej., `es-m` → Madrid, `es-b` → Barcelona, `es-a` → Alicante). Visualmente, el guion separador y el carácter de subdivisión pueden confundirse con un guion simple. Al construir o validar hostnames con estos códigos, prestar especial atención a que el LOC sea `es-m` y no `es` ni `m` de forma independiente. Los pipelines de validación deben cubrir esta casuística explícitamente (ver Anexo C).
+> **Nota operativa — LOC de un solo carácter tras el guion:** algunos códigos ISO 3166-2 producen segmentos de un solo carácter en el campo `LOC` (p. ej., `es-m` → Madrid, `es-b` → Barcelona, `es-a` → Alicante). Visualmente, el guion separador y el carácter de subdivisión pueden confundirse con un guion simple. Al construir o validar hostnames con estos códigos, prestar especial atención a que el LOC sea `es-m` y no `es` ni `m` de forma independiente. Los pipelines de validación deben cubrir esta casuística explícitamente (ver Anexo C).
  
 ---
  
@@ -436,24 +447,24 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
  
 ### 8.1 Qué Evitar en el Hostname
  
-❌ Unidad de Negocio (BU) → va en CMDB/etiquetas cloud.  
-❌ Versiones de software (`sql2022`, `win2019`).  
-❌ Nombres de proyectos temporales.  
-❌ Información de hardware específico (modelo, cores).  
-❌ Nombres creativos o de personajes.  
-❌ Inventar códigos no documentados en el estándar.  
-❌ Cambiar hostname por movimientos menores (cambio de AZ, migración de host físico dentro de la misma ubicación).  
-❌ Reutilizar hostnames decomisionados.  
+- Unidad de Negocio (BU) → va en CMDB/etiquetas cloud.  
+- Versiones de software (`sql2022`, `win2019`).  
+- Nombres de proyectos temporales.  
+- Información de hardware específico (modelo, cores).  
+- Nombres creativos o de personajes.  
+- Inventar códigos no documentados en el estándar.  
+- Cambiar hostname por movimientos menores (cambio de AZ, migración de host físico dentro de la misma ubicación).  
+- Reutilizar hostnames decomisionados.  
  
 ### 8.2 Qué Hacer
  
-✅ Usar CNAMEs para nombres funcionales que pueden moverse entre nodos.  
-✅ Documentar excepciones explícitamente con aprobación de Arquitectura.  
-✅ Validar nombres automáticamente en pipelines CI/CD.  
-✅ Mantener CMDB actualizada como fuente de verdad.  
-✅ Registrar en CMDB el nombre corto de AD junto al hostname DNS.  
-✅ Usar `becall.local` para registros DNS de servidores internos de AD hasta que se complete la migración a `becall.net` con split-horizon (ver sección 3.2 y sección 7.2).  
-✅ Registrar en CMDB el dominio utilizado (`becall.net` o `becall.local`) para facilitar la planificación de la migración.  
+- Usar CNAMEs para nombres funcionales que pueden moverse entre nodos.  
+- Documentar excepciones explícitamente con aprobación de Arquitectura.  
+- Validar nombres automáticamente en pipelines CI/CD.  
+- Mantener CMDB actualizada como fuente de verdad.  
+- Registrar en CMDB el nombre corto de AD junto al hostname DNS.  
+- Usar `becall.local` para registros DNS de servidores internos de AD hasta que se complete la migración a `becall.net` con split-horizon (ver sección 3.2 y sección 7.2).  
+- Registrar en CMDB el dominio utilizado (`becall.net` o `becall.local`) para facilitar la planificación de la migración.  
  
 ---
  
@@ -527,7 +538,7 @@ prd.es-m.dmg.becall.local     (Producción DMG Cloud Madrid — DNS interno)
  
 ---
  
-# PARTE II — Nomenclatura de Equipos de Usuario
+# Nomenclatura de Equipos de Usuario (Parte II )
  
 Aplica a todos los equipos de usuario (portátiles, sobremesas, tablets, teléfonos corporativos, etc.). Los servidores se cubren en la Parte I.
  
@@ -558,7 +569,7 @@ BCL-PT-11-001   (Equipo asignado a empleado de la sede de Lisboa)
  
 > El código `LOC` es el mismo estándar ISO 3166-2 que en servidores, en mayúsculas. Esto permite cruzar datos de CMDB entre ambos inventarios de forma directa.
 
-> ⚠️ **Advertencia — Diferencia de capitalización entre Parte I y Parte II:** el campo `LOC` se escribe en **minúsculas** en hostnames de servidor (`es-m`, `pt-11`) y en **mayúsculas** en nombres de equipo de usuario (`ES-M`, `PT-11`). Esta diferencia es intencionada y facilita distinguir visualmente ambos inventarios, pero puede provocar errores si se construyen nombres de forma manual o en scripts que mezclan ambas convenciones. Todos los pipelines de automatización deben aplicar la transformación de mayúsculas/minúsculas según el tipo de activo. Véase Anexo C para expresiones regulares de validación.
+> **Advertencia — Diferencia de capitalización entre Parte I y Parte II:** el campo `LOC` se escribe en **minúsculas** en hostnames de servidor (`es-m`, `pt-11`) y en **mayúsculas** en nombres de equipo de usuario (`ES-M`, `PT-11`). Esta diferencia es intencionada y facilita distinguir visualmente ambos inventarios, pero puede provocar errores si se construyen nombres de forma manual o en scripts que mezclan ambas convenciones. Todos los pipelines de automatización deben aplicar la transformación de mayúsculas/minúsculas según el tipo de activo. Véase Anexo C para expresiones regulares de validación.
  
 ---
  
@@ -617,11 +628,11 @@ El nuevo patrón `BCL-<LOC>-<NNN>` produce nombres que caben dentro del límite 
  
 | Nombre de equipo | Longitud | ¿Entra en 15 chars? |
 |------------------|----------|---------------------|
-| `BCL-ES-M-001` | 13 chars | ✅ Sin truncado |
-| `BCL-ES-LE-001` | 14 chars | ✅ Sin truncado |
-| `BCL-ES-AV-001` | 14 chars | ✅ Sin truncado |
-| `BCL-PT-11-001` | 14 chars | ✅ Sin truncado |
-| `BCL-GB-LND-001` | 15 chars | ✅ Sin truncado (límite exacto) |
+| `BCL-ES-M-001` | 13 chars | Sin truncado |
+| `BCL-ES-LE-001` | 14 chars | Sin truncado |
+| `BCL-ES-AV-001` | 14 chars | Sin truncado |
+| `BCL-PT-11-001` | 14 chars | Sin truncado |
+| `BCL-GB-LND-001` | 15 chars | Sin truncado (límite exacto) |
  
 El nombre del equipo se usa directamente como `cn` y `sAMAccountName` en AD sin necesidad de nombre corto adicional.
  
@@ -1047,6 +1058,8 @@ function validateUserDevice(name) {
 | Equipo de usuario | `^BCL-([A-Z]{2,3}-[A-Z0-9]{1,3})-([0-9]{3})$` — ver **C.4** | `NNN >= 001`; LOC en lista aprobada; longitud <= 15 |
 
 > **Mantenimiento:** cuando se añadan nuevos códigos `LOC`, `PLT`, `ENV` o `ROL` al estándar, actualizar simultáneamente los patrones de este Anexo C y el documento maestro de códigos (sección 18.1). El Comité de Nomenclatura es responsable de mantener la sincronía entre ambos.
+
+<!-- 
 ---
 
 ## Anexo D: Historial de Cambios
@@ -1058,4 +1071,5 @@ function validateUserDevice(name) {
 | 1.2 | 17/03/2026 | juan.cuellar@becallgroup.com | Alta servidor `es-m-dmg-prd-fsr-001`. Creación subzonas DNS internas `dmg.becall.local`, `es-m.dmg.becall.local`, `prd.es-m.dmg.becall.local`. Aclaración dominio interno `becall.local` vs dominio público `becall.net`. |
 | 1.3 | 17/03/2026 | juan.cuellar@becallgroup.com | Revisión de calidad pre-producción: corrección longitud LOC (4–6 chars); ampliación ROL a 2–4 chars para cubrir `mq`; formalización de `becall.local` en patrón FQDN (sección 3.2) y regex C.2 con nota de transición; criterio de uso `onp`/`vmw`/`kvm` clarificado en sección 4.2; corrección región `euw1` (solo Irlanda); corrección Ejemplo 5 (nombre corto AD aleatorio y campo `description`); paso 5 de alta de servidores diferenciado por dominio; sección 7.2 corregida (FQDN, no hostname); sección 16 migrada a LOC completo; nota de equipos de red sin AD; mejoras en sección 8.2 y Anexo C.5; versión 1.0 añadida al historial. |
 | 1.4 | 17/03/2026 | juan.cuellar@becallgroup.com | Revisión sobre objeto AD real (servidor `BCL-ESSV-FSR01`): atributo `description` cambiado de hostname a FQDN completo en toda la documentación (secciones 2.3, 2.3.1, 6.1, 6.2 y todos los ejemplos de la sección 9); documentación del atributo `dNSHostName` con tabla comparativa en sección 2.3.1; nueva sección 17 (Política de Migración de Servidores Pre-Estándar) con clasificación, plazos de migración progresiva, proceso de renombrado y política de exenciones; sección 17 anterior renumerada a sección 18. |
-| 1.5 | 06/04/2026 | juan.cuellar@becallgroup.com | Alta de nuevos roles funcionales `cti`, `mail`, `pbx` para Contact Center/CTI, correo y PBX; actualización de sección 4.4 (ROL), Anexo C.1 (regex de hostname) y Documento Maestro de Códigos (sección 18.1). |
+| 1.5 | 06/04/2026 | juan.cuellar@becallgroup.com | Alta de nuevos roles funcionales `cti`, `mail`, `pbx` para Contact Center/CTI, correo y PBX; actualización de sección 4.4 (ROL), Anexo C.1 (regex de hostname) y Documento Maestro de Códigos (sección 18.1). | 
+-->

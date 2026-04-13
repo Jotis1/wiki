@@ -1,0 +1,256 @@
+---
+import { ArrowRight } from "@untitledui/icons";
+
+type Size = "md" | "lg";
+type Color = "brand" | "warning" | "error" | "gray" | "success";
+type Theme = "light" | "modern";
+type Align = "leading" | "trailing";
+
+interface Props {
+    addonText: string;
+    size?: Size;
+    color?: Color;
+    theme?: Theme;
+    align?: Align;
+    class?: string;
+    showIcon?: boolean;
+}
+
+const {
+    addonText,
+    size = "md",
+    color = "brand",
+    theme = "light",
+    align = "leading",
+    class: className,
+    showIcon = true,
+} = Astro.props;
+
+const hasDefaultSlot = Astro.slots.has("default");
+
+// ── Base classes ──────────────────────────────────────────────────────────────
+
+const baseRoot: Record<Theme, string> = {
+    light: "rounded-full ring-1 ring-inset",
+    modern: "rounded-[10px] bg-primary text-secondary shadow-xs ring-1 ring-inset ring-primary hover:bg-secondary",
+};
+
+const baseAddon: Record<Theme, string> = {
+    light: "rounded-full ring-1 ring-inset",
+    modern: "flex items-center rounded-md bg-primary shadow-xs ring-1 ring-inset ring-primary",
+};
+
+const baseIcon: Record<Theme, string> = {
+    light: "",
+    modern: "text-utility-neutral-500",
+};
+
+// ── Size classes ──────────────────────────────────────────────────────────────
+
+type SizeClasses = {
+    root: (string | false | undefined)[];
+    addon: (string | false | undefined)[];
+    icon: string;
+    dot?: string;
+};
+
+const sizeMap: Record<Align, Record<Size, SizeClasses>> = {
+    leading: {
+        md: {
+            root: [
+                "py-1 pr-2 pl-1 text-xs font-medium",
+                !hasDefaultSlot && !showIcon && "pr-1",
+            ],
+            addon: [
+                "px-2 py-0.5",
+                theme === "modern" && "gap-1 px-1.5",
+                hasDefaultSlot && "mr-2",
+            ],
+            icon: "ml-1 size-4",
+        },
+        lg: {
+            root: [
+                "py-1 pr-2 pl-1 text-sm font-medium",
+                !hasDefaultSlot && !showIcon && "pr-1",
+            ],
+            addon: [
+                "px-2.5 py-0.5",
+                theme === "modern" && "gap-1.5 px-2",
+                hasDefaultSlot && "mr-2",
+            ],
+            icon: "ml-1 size-4",
+        },
+    },
+    trailing: {
+        md: {
+            root: [
+                "py-1 pr-1 pl-3 text-xs font-medium",
+                theme === "modern" && "pl-2.5",
+            ],
+            addon: [
+                "py-0.5 pr-1.5 pl-2",
+                theme === "modern" && "pr-1.5 pl-2",
+                hasDefaultSlot && "ml-2",
+            ],
+            icon: "ml-0.5 size-3 stroke-[3px]",
+            dot: "mr-1.5",
+        },
+        lg: {
+            root: ["py-1 pr-1 pl-3 text-sm font-medium"],
+            addon: [
+                "py-0.5 pr-2 pl-2.5",
+                theme === "modern" && "pr-1.5 pl-2",
+                hasDefaultSlot && "ml-2",
+            ],
+            icon: "ml-1 size-3 stroke-[3px]",
+            dot: "mr-2",
+        },
+    },
+};
+
+const sizes = sizeMap[align][size];
+
+// ── Color classes ─────────────────────────────────────────────────────────────
+
+type ColorClasses = {
+    root?: string;
+    addon?: string;
+    icon?: string;
+    dot?: string;
+};
+
+const colorMap: Record<Theme, Record<Color, ColorClasses>> = {
+    light: {
+        brand: {
+            root: "bg-utility-brand-50 text-utility-brand-700 ring-utility-brand-200 hover:bg-utility-brand-100",
+            addon: "bg-primary text-current ring-utility-brand-200",
+            icon: "text-utility-brand-500",
+        },
+        gray: {
+            root: "bg-utility-neutral-50 text-utility-neutral-700 ring-utility-neutral-200 hover:bg-utility-neutral-100",
+            addon: "bg-primary text-current ring-utility-neutral-200",
+            icon: "text-utility-neutral-500",
+        },
+        error: {
+            root: "bg-utility-red-50 text-utility-red-700 ring-utility-red-200 hover:bg-utility-red-100",
+            addon: "bg-primary text-current ring-utility-red-200",
+            icon: "text-utility-red-500",
+        },
+        warning: {
+            root: "bg-utility-yellow-50 text-utility-yellow-700 ring-utility-yellow-200 hover:bg-utility-yellow-100",
+            addon: "bg-primary text-current ring-utility-yellow-200",
+            icon: "text-utility-yellow-500",
+        },
+        success: {
+            root: "bg-utility-green-50 text-utility-green-700 ring-utility-green-200 hover:bg-utility-green-100",
+            addon: "bg-primary text-current ring-utility-green-200",
+            icon: "text-utility-green-500",
+        },
+    },
+    modern: {
+        brand: {
+            dot: "bg-utility-brand-500 outline-3 -outline-offset-1 outline-utility-brand-100",
+        },
+        gray: {
+            dot: "bg-utility-neutral-500 outline-3 -outline-offset-1 outline-utility-neutral-100",
+        },
+        error: {
+            dot: "bg-utility-red-500 outline-3 -outline-offset-1 outline-utility-red-100",
+        },
+        warning: {
+            dot: "bg-utility-yellow-500 outline-3 -outline-offset-1 outline-utility-yellow-100",
+        },
+        success: {
+            dot: "bg-utility-green-500 outline-3 -outline-offset-1 outline-utility-green-100",
+        },
+    },
+};
+
+const colors = colorMap[theme][color];
+
+// ── ArrowRight className (React prop, no class:list disponible aquí) ───────────
+const iconClassName = [baseIcon[theme], sizes.icon, colors.icon]
+    .filter(Boolean)
+    .join(" ");
+---
+
+{
+    align === "trailing" ? (
+        <div
+            class:list={[
+                "inline-flex w-max cursor-pointer items-center transition duration-100 ease-linear",
+                baseRoot[theme],
+                sizes.root,
+                colors.root,
+                className,
+            ]}
+        >
+            {theme === "modern" && (
+                <span
+                    class:list={[
+                        "inline-block size-2 shrink-0 rounded-full",
+                        sizes.dot,
+                        colors.dot,
+                    ]}
+                />
+            )}
+
+            <slot />
+
+            <span
+                class:list={[
+                    "inline-flex items-center",
+                    baseAddon[theme],
+                    sizes.addon,
+                    colors.addon,
+                ]}
+            >
+                {addonText}
+
+                {showIcon && (
+                    <slot name="icon">
+                        <ArrowRight className={iconClassName} />
+                    </slot>
+                )}
+            </span>
+        </div>
+    ) : (
+        <div
+            class:list={[
+                "inline-flex w-max cursor-pointer items-center transition duration-100 ease-linear",
+                baseRoot[theme],
+                sizes.root,
+                colors.root,
+                className,
+            ]}
+        >
+            <span
+                class:list={[
+                    "inline-flex items-center",
+                    baseAddon[theme],
+                    sizes.addon,
+                    colors.addon,
+                ]}
+            >
+                {theme === "modern" && (
+                    <span
+                        class:list={[
+                            "inline-block size-2 shrink-0 rounded-full",
+                            sizes.dot,
+                            colors.dot,
+                        ]}
+                    />
+                )}
+                {addonText}
+            </span>
+
+            <slot />
+
+            {showIcon && (
+                <slot name="icon">
+                    <ArrowRight className={iconClassName} />
+                </slot>
+            )}
+        </div>
+    )
+}

@@ -1,5 +1,6 @@
 // @ts-check
 
+import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 
@@ -25,7 +26,16 @@ export default defineConfig({
 			weights: [100, 200, 300, 400, 50, 600, 700, 800, 900],
 		},
 	],
+
+	markdown: {
+		shikiConfig: {
+			theme: "github-light",
+		},
+	},
+
 	vite: {
 		plugins: [tailwindcss()],
 	},
+
+	integrations: [react()],
 });

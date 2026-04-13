@@ -1,0 +1,53 @@
+---
+import type {
+    BadgeColors,
+    BadgeTypes,
+    IconComponentType,
+    Sizes,
+} from "@/components/base/badges/badge-types";
+import { badgeTypes } from "@/components/base/badges/badge-types";
+import { withPillTypes } from "@/components/base/badges/badge-colors";
+
+interface Props {
+    type?: BadgeTypes;
+    size?: Sizes;
+    color?: BadgeColors;
+    icon: IconComponentType;
+}
+
+const {
+    type = "pill-color",
+    size = "md",
+    color = "gray",
+    icon: Icon,
+} = Astro.props;
+
+const colors = withPillTypes[type];
+
+const pillSizes = {
+    sm: "p-1.25",
+    md: "p-1.5",
+    lg: "p-2",
+};
+const badgeSizes = {
+    sm: "p-1.25",
+    md: "p-1.5",
+    lg: "p-2 rounded-lg",
+};
+
+const sizeMap = {
+    [badgeTypes.pillColor]: pillSizes,
+    [badgeTypes.badgeColor]: badgeSizes,
+    [badgeTypes.badgeModern]: badgeSizes,
+};
+---
+
+<span
+    class:list={[
+        colors.common,
+        sizeMap[type][size],
+        colors.styles[color]?.root,
+    ]}
+>
+    <Icon class:list={["size-3 stroke-[3px]", colors.styles[color]?.addon]} />
+</span>

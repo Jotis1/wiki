@@ -5,6 +5,8 @@ import { z } from "astro/zod";
 const wikiPostSchema = z.object({
 	title: z.string(),
 	description: z.string(),
+	readingTime: z.number(),
+	tags: z.array(z.string()),
 	slug: z.string().optional(),
 });
 

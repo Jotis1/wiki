@@ -1,0 +1,53 @@
+---
+import type {
+    BadgeColors,
+    BadgeTypes,
+    Sizes,
+} from "@/components/base/badges/badge-types";
+import { badgeTypes } from "@/components/base/badges/badge-types";
+import { withPillTypes } from "@/components/base/badges/badge-colors";
+
+interface Props {
+    type?: BadgeTypes;
+    size?: Sizes;
+    color?: BadgeColors;
+    class?: string;
+}
+
+const {
+    type = "pill-color",
+    size = "md",
+    color = "gray",
+    class: className,
+} = Astro.props;
+
+const colors = withPillTypes[type];
+
+const pillSizes = {
+    sm: "py-0.5 px-2 text-xs font-medium",
+    md: "py-0.5 px-2.5 text-sm font-medium",
+    lg: "py-1 px-3 text-sm font-medium",
+};
+const badgeSizes = {
+    sm: "py-0.5 px-1.5 text-xs font-medium",
+    md: "py-0.5 px-2 text-sm font-medium",
+    lg: "py-1 px-2.5 text-sm font-medium rounded-lg",
+};
+
+const sizeMap = {
+    [badgeTypes.pillColor]: pillSizes,
+    [badgeTypes.badgeColor]: badgeSizes,
+    [badgeTypes.badgeModern]: badgeSizes,
+};
+---
+
+<span
+    class:list={[
+        colors.common,
+        sizeMap[type][size],
+        colors.styles[color]?.root,
+        className,
+    ]}
+>
+    <slot />
+</span>

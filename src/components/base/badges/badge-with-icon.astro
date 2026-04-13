@@ -1,0 +1,82 @@
+---
+import type {
+    BadgeColors,
+    BadgeTypes,
+    IconComponentType,
+    Sizes,
+} from "@/components/base/badges/badge-types";
+import { badgeTypes } from "@/components/base/badges/badge-types";
+import { withBadgeTypes } from "@/components/base/badges/badge-colors";
+
+interface Props {
+    type?: BadgeTypes;
+    size?: Sizes;
+    color?: BadgeColors;
+    iconLeading?: IconComponentType;
+    iconTrailing?: IconComponentType;
+    class?: string;
+}
+
+const {
+    type = "pill-color",
+    size = "md",
+    color = "gray",
+    iconLeading: IconLeading,
+    iconTrailing: IconTrailing,
+    class: className,
+} = Astro.props;
+
+const colors = withBadgeTypes[type];
+
+const icon = IconLeading ? "leading" : "trailing";
+
+const pillSizes = {
+    sm: {
+        trailing: "gap-0.5 py-0.5 pl-2 pr-1.5 text-xs font-medium",
+        leading: "gap-0.5 py-0.5 pr-2 pl-1.5 text-xs font-medium",
+    },
+    md: {
+        trailing: "gap-1 py-0.5 pl-2.5 pr-2 text-sm font-medium",
+        leading: "gap-1 py-0.5 pr-2.5 pl-2 text-sm font-medium",
+    },
+    lg: {
+        trailing: "gap-1 py-1 pl-3 pr-2.5 text-sm font-medium",
+        leading: "gap-1 py-1 pr-3 pl-2.5 text-sm font-medium",
+    },
+};
+const badgeSizes = {
+    sm: {
+        trailing: "gap-0.5 py-0.5 pl-2 pr-1.5 text-xs font-medium",
+        leading: "gap-0.5 py-0.5 pr-2 pl-1.5 text-xs font-medium",
+    },
+    md: {
+        trailing: "gap-1 py-0.5 pl-2 pr-1.5 text-sm font-medium",
+        leading: "gap-1 py-0.5 pr-2 pl-1.5 text-sm font-medium",
+    },
+    lg: {
+        trailing: "gap-1 py-1 pl-2.5 pr-2 text-sm font-medium rounded-lg",
+        leading: "gap-1 py-1 pr-2.5 pl-2 text-sm font-medium rounded-lg",
+    },
+};
+
+const sizeMap = {
+    [badgeTypes.pillColor]: pillSizes,
+    [badgeTypes.badgeColor]: badgeSizes,
+    [badgeTypes.badgeModern]: badgeSizes,
+};
+
+const addonClass = [colors.styles[color]?.addon, "size-3 stroke-3"];
+---
+
+<span
+    class:list={[
+        colors.common,
+        sizeMap[type][size][icon],
+        colors.styles[color]?.root,
+        className,
+    ]}
+>
+    {IconLeading && <IconLeading class:list={addonClass} />}
+    <slot />
+    {IconTrailing && <IconTrailing class:list={addonClass} />}
+</span>

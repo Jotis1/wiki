@@ -1,4 +1,7 @@
 ---
+import BadgeGroup from "@/components/base/badges/badge-groups.astro";
+import Badge from "@/components/base/badges/badge.astro";
+import Button from "@/components/base/buttons/button.astro";
 import Layout from "@/components/shared/layouts/default.astro";
 import { getCollection, render } from "astro:content";
 
@@ -16,7 +19,59 @@ const { Content } = await render(post);
 ---
 
 <Layout title={post.data.title}>
-    <div class="prose">
-        <Content />
-    </div>
+    <header
+        class="mx-auto max-w-7xl pt-16 pb-24 lg:px-8 px-4 flex items-center justify-center gap-8"
+    >
+        <div class="flex flex-col gap-12">
+            <div class="flex flex-col gap-6">
+                <div class="max-w-3xl w-full flex flex-col gap-4">
+                    <BadgeGroup
+                        addonText={post.data.tags[0]}
+                        color="brand"
+                        size="md"
+                        showIcon={false}
+                    >
+                        Lectura de {post.data.readingTime} minutos
+                    </BadgeGroup>
+                    <h1
+                        class="text-display-xl font-semibold font-display text-primary"
+                    >
+                        {post.data.title}
+                    </h1>
+                </div>
+                <p class="text-xl">{post.data.description}</p>
+            </div>
+        </div>
+        <picture class="max-w-xl w-full h-180 bg-secondary"></picture>
+    </header>
+    <section class="mx-auto max-w-5xl w-full pb-24 lg:px-8 px-4 flex gap-16">
+        <aside class="min-w-60 hidden lg:flex flex-col gap-8">
+            <hr class="border-secondary" />
+            <div class="flex flex-col gap-4">
+                <p class="font-semibold text-brand-tertiary">
+                    Tabla de contenidos
+                </p>
+                <div class="flex flex-col gap-3">
+                    <Button>Hello world</Button>
+                </div>
+            </div>
+            <hr class="border-secondary" />
+        </aside>
+        <div class="flex flex-col">
+            <div class="prose max-w-180 w-full">
+                <Content />
+            </div>
+            <div
+                class="py-6 mt-12 flex flex-wrap gap-2 border-t border-secondary"
+            >
+                {
+                    post.data.tags.map((tag) => (
+                        <Badge type="pill-color" color="brand">
+                            {tag}
+                        </Badge>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
 </Layout>
