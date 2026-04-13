@@ -1,5 +1,10 @@
 ---
 import Layout from "@/components/shared/layouts/default.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("wiki");
+
+console.log(posts);
 ---
 
 <Layout> <h1>Astro</h1> </Layout>

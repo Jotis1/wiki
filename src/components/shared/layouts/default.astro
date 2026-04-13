@@ -9,7 +9,7 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="en" class="scroll-smooth antialiased">
 	<head>
 		<Font cssVariable="--font-geist-sans" />
 		<Font cssVariable="--font-geist-mono" />
@@ -21,7 +21,7 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title ?? "Becall Wiki - La wiki interna de Becall"}</title>
 	</head>
-	<body>
+	<body class="bg-primary text-tertiary">
 		<slot />
 	</body>
 </html>
