@@ -4,18 +4,18 @@ import BadgeGroup from "@/components/base/badges/badge-groups.astro";
 import Badge from "@/components/base/badges/badge.astro";
 import Button from "@/components/base/buttons/button.astro";
 import Layout from "@/components/shared/layouts/default.astro";
-import { getCollection, render } from "astro:content";
+import { getEntry, render } from "astro:content";
 
-export async function getStaticPaths() {
-    const posts = await getCollection("wiki");
-
-    return posts.map((post) => ({
-        params: { slug: post.id },
-        props: { post },
-    }));
+const { slug } = Astro.params;
+if (slug === undefined) {
+    return Astro.redirect("/404");
 }
 
-const { post } = Astro.props;
+const post = await getEntry("wiki", slug);
+if (post === undefined) {
+    return Astro.redirect("/404");
+}
+
 const { Content, headings } = await render(post);
 ---
 
