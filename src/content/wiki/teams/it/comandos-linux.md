@@ -1,7 +1,7 @@
 ---
-title: Comandos Linux
-description: Manual referencia linux
-readingTime: 120
+title: Linux para Administradores de Sistemas
+description: "Referencia operacional: LVM, red, servicios, benchmarking y diagnóstico"
+readingTime: 42
 slug: teams/it/linux
 tags:
     - Tecnología
@@ -9,12 +9,10 @@ tags:
 image: /teams/it/linux.png
 ---
 
-
-
-![Estado](https://img.shields.io/badge/Estado-Activo-green)
+<!-- ![Estado](https://img.shields.io/badge/Estado-Activo-green)
 ![Plataforma](https://img.shields.io/badge/Plataforma-Linux-orange)
 ![Tipo](https://img.shields.io/badge/Tipo-Referencia%20Admin-blue)
-![Última actualización](https://img.shields.io/badge/Actualizado-2026-lightgrey)
+![Última actualización](https://img.shields.io/badge/Actualizado-2026-lightgrey) -->
 
 # 🐧 Comandos Útiles para Administradores Linux
 
