@@ -6,6 +6,7 @@ slug: teams/it/naming-standard
 tags:
     - Tecnología
     - Estándares
+image: /teams/it/naming-standard.png
 ---
 
 Este documento define el estándar de nomenclatura para todos los activos gestionados por Becall:

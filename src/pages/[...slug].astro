@@ -1,9 +1,9 @@
 ---
+import HandDrawnArrow from "@/components/assets/hand-drawn-arrow.astro";
 import BadgeGroup from "@/components/base/badges/badge-groups.astro";
 import Badge from "@/components/base/badges/badge.astro";
 import Button from "@/components/base/buttons/button.astro";
 import Layout from "@/components/shared/layouts/default.astro";
-import { Link01 } from "@untitledui/icons";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -21,11 +21,11 @@ const { Content, headings } = await render(post);
 
 <Layout title={post.data.title}>
     <header
-        class="mx-auto max-w-7xl pt-16 pb-24 lg:px-8 px-4 flex items-center justify-center gap-8"
+        class="mx-auto max-w-7xl pt-16 pb-24 lg:px-8 px-4 flex lg:flex-row flex-col items-center justify-center gap-8"
     >
         <div class="flex flex-col gap-12">
             <div class="flex flex-col gap-6">
-                <div class="max-w-3xl w-full flex flex-col gap-4">
+                <div class="max-w-3xl w-full flex flex-col gap-4-alpha-black">
                     <BadgeGroup
                         addonText={post.data.tags[0]}
                         color="brand"
@@ -43,7 +43,20 @@ const { Content, headings } = await render(post);
                 <p class="text-xl">{post.data.description}</p>
             </div>
         </div>
-        <picture class="max-w-xl w-full h-180 bg-secondary"></picture>
+        <picture class="relative max-w-xl w-full aspect-3/4 bg-secondary">
+            <HandDrawnArrow
+                class="absolute -bottom-15 -left-1/2 lg:block hidden"
+            />
+            {
+                post.data.image && (
+                    <img
+                        src={post.data.image}
+                        alt={post.data.title}
+                        class="size-full object-cover"
+                    />
+                )
+            }
+        </picture>
     </header>
     <section
         class="relative mx-auto max-w-5xl w-full pb-24 lg:px-8 px-4 flex gap-16"

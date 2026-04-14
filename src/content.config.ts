@@ -8,6 +8,7 @@ const wikiPostSchema = z.object({
 	readingTime: z.number(),
 	tags: z.array(z.string()),
 	slug: z.string().optional(),
+	image: z.string().optional(),
 });
 
 const wikiPostLoader = glob({
