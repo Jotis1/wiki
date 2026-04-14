@@ -1,3 +1,16 @@
+---
+title: Comandos Linux
+description: Manual referencia linux
+readingTime: 120
+slug: teams/it/linux
+tags:
+    - Tecnología
+    - Linux
+image: /teams/it/linux.png
+---
+
+
+
 ![Estado](https://img.shields.io/badge/Estado-Activo-green)
 ![Plataforma](https://img.shields.io/badge/Plataforma-Linux-orange)
 ![Tipo](https://img.shields.io/badge/Tipo-Referencia%20Admin-blue)
