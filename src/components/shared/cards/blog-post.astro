@@ -1,0 +1,42 @@
+---
+import BadgeGroups from "@/components/base/badges/badge-groups.astro";
+import Button from "@/components/base/buttons/button.astro";
+import { ArrowUpRight } from "@untitledui/icons";
+
+interface Props {
+    title: string;
+    description: string;
+    readingTime: number;
+    tags: string[];
+    slug?: string;
+    image?: string;
+}
+
+const { title, description, readingTime, tags, slug, image } = Astro.props;
+---
+
+<div class="max-w-96 flex flex-col rounded-2xl border border-secondary_alt">
+    <picture
+        class="relative w-full h-64 bg-tertiary rounded-t-2xl outline outline-alpha-black/10"
+    >
+        <img src={image} alt={title} class="size-full object-cover" /></picture
+    >
+    <div class="p-6 flex flex-col gap-3">
+        <BadgeGroups addonText={tags[0]}>
+            Lectura de {readingTime} minutos
+        </BadgeGroups>
+        <div class="flex flex-col gap-1">
+            <div class="flex items-center justify-between gap-4">
+                <p class="text-lg font-semibold text-primary truncate">
+                    {title}
+                </p>
+                <Button href={slug} color="link-gray" class="shrink-0">
+                    <ArrowUpRight slot="icon-leading" />
+                </Button>
+            </div>
+            <p class="line-clamp-3">
+                {description}
+            </p>
+        </div>
+    </div>
+</div>

@@ -2,11 +2,11 @@
 title: Linux para Administradores de Sistemas
 description: "Referencia operacional: LVM, red, servicios, benchmarking y diagnóstico"
 readingTime: 42
-slug: teams/it/linux
+slug: teams/it/linux-commands
 tags:
     - Tecnología
     - Linux
-image: /teams/it/linux.png
+image: /teams/it/linux-commands.png
 ---
 
 <!-- ![Estado](https://img.shields.io/badge/Estado-Activo-green)

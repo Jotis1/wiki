@@ -1,5 +1,36 @@
 ---
 import Layout from "@/components/shared/layouts/default.astro";
+import Button from "@/components/base/buttons/button.astro";
+import { ArrowLeft } from "@untitledui/icons";
+import NotFoundBackground from "@/components/assets/not-found-background.astro";
 ---
 
-<Layout> 404 </Layout>
+<Layout>
+    <div class="relative h-dvh flex items-center justify-center">
+        <div
+            class="max-w-7xl w-full lg:px-8 px-4 py-24 flex flex-col gap-12 items-center"
+        >
+            <div class="max-w-3xl w-full flex flex-col gap-6 text-center">
+                <h1
+                    class="font-display text-display-xl font-semibold text-primary"
+                >
+                    ¡Ups! Esta página se desvió del camino
+                </h1>
+                <p class="text-xl">
+                    Parece que la página que buscas está jugando al escondite: o
+                    no existe o se ha movido a un lugar secreto
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <Button onclick="history.back()" size="lg" color="secondary">
+                    <ArrowLeft slot="icon-leading" />
+                    Volver
+                </Button>
+                <Button href="/" size="lg">Ir al inicio</Button>
+            </div>
+        </div>
+        <NotFoundBackground
+            class="-z-1 absolute left-1/2 top-1/2 -translate-1/2"
+        />
+    </div>
+</Layout>

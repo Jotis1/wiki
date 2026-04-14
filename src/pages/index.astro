@@ -1,15 +1,40 @@
 ---
+import BlogPost from "@/components/shared/cards/blog-post.astro";
 import Layout from "@/components/shared/layouts/default.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("wiki");
 ---
 
 <Layout>
-    <p class="text-display-sm font-thin">Astro</p>
-    <p class="text-display-sm font-extralight">Astro</p>
-    <p class="text-display-sm font-light">Astro</p>
-    <p class="text-display-sm font-normal">Astro</p>
-    <p class="text-display-sm font-medium">Astro</p>
-    <p class="text-display-sm font-semibold">Astro</p>
-    <p class="text-display-sm font-bold">Astro</p>
-    <p class="text-display-sm font-extrabold">Astro</p>
-    <p class="text-display-sm font-black">Astro</p>
+    <header class="lg:px-8 px-4 py-24 flex flex-col items-center gap-8">
+        <div class="max-w-5xl flex flex-col gap-3 text-center">
+            <p class="font-semibold text-brand-secondary">
+                Base de conocimientos y wiki
+            </p>
+            <h1 class="font-display text-display-md font-semibold text-primary">
+                Bienvenido a la wiki
+            </h1>
+            <p class="text-lg">
+                Explora la documentación técnica, las directrices estándar y las
+                mejores prácticas de TI.
+            </p>
+        </div>
+    </header>
+    <div
+        class="lg:px-8 px-4 pt-8 pb-24 mx-auto max-w-7xl flex flex-wrap justify-center gap-8"
+    >
+        {
+            posts.map(({ data }) => (
+                <BlogPost
+                    title={data.title}
+                    description={data.description}
+                    readingTime={data.readingTime}
+                    slug={data.slug}
+                    tags={data.tags}
+                    image={data.image}
+                />
+            ))
+        }
+    </div>
 </Layout>
