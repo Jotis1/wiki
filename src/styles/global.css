@@ -67,6 +67,13 @@ table {
     overflow: auto
 }
 
+code {
+  display: inline;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;   /* o word-break: break-all; */
+}
+
 /* Hide the default outline on chart elements. */
 .recharts-surface,
 .recharts-surface g,

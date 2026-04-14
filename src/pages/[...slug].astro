@@ -24,13 +24,15 @@ const { Content, headings } = await render(post);
     <header
         class="mx-auto max-w-7xl pt-16 pb-24 lg:px-8 px-4 flex lg:flex-row flex-col items-center justify-center gap-8"
     >
-        <div class="flex flex-col gap-12">
+        <div class="max-w-full flex flex-col gap-12">
             <Button color="link-color" href="/">
                 <ArrowLeft slot="icon-leading" />
                 Volver al inicio
             </Button>
             <div class="flex flex-col gap-6">
-                <div class="max-w-3xl w-full flex flex-col gap-4-alpha-black">
+                <div
+                    class="lg:max-w-3xl max-w-full w-full flex flex-col gap-4 wrap-break-word"
+                >
                     <BadgeGroup
                         addonText={post.data.tags[0]}
                         color="brand"
